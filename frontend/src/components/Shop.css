@@ -1,0 +1,127 @@
+/* Fullscreen Container */
+/* Ensure body expands with content */
+html, body {
+    height: auto;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .shop-container {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    min-height: auto;
+    min-width: 100vw;
+  }
+  
+  .shop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4caf50;
+    padding: 20px;
+    color: white;
+  }
+  
+  .shop-title {
+    font-size: 32px;
+    font-weight: bold;
+  }
+  
+  .search-bar {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    width: 400px;
+  }
+  
+  .search-bar:focus {
+    outline: 2px solid #4caf50;
+  }
+  
+  .cart-info {
+    font-size: 18px;
+  }
+  
+  .no-results {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 22px;
+    color: #555;
+  }
+  
+  .flower-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+    padding: 40px;
+  }
+  
+  .flower-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    overflow: hidden;
+    width: calc(25% - 24px);
+    max-width: 300px;
+    transition: transform 0.3s;
+  }
+  
+  .flower-card:hover {
+    transform: translateY(-8px);
+  }
+  
+  .flower-image {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+  }
+  
+  .flower-name {
+    font-size: 22px;
+    margin: 16px;
+  }
+  
+  .flower-price {
+    color: #777;
+    margin: 0 16px 16px;
+  }
+  
+  .add-to-cart-btn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 14px;
+    width: calc(100% - 32px);
+    margin: 0 16px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .add-to-cart-btn:hover {
+    background-color: #45a049;
+  }
+  
+  @media (max-width: 1200px) {
+    .flower-card {
+      width: calc(33.33% - 24px);
+    }
+  }
+  
+  @media (max-width: 900px) {
+    .flower-card {
+      width: calc(50% - 24px);
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .flower-card {
+      width: 100%;
+    }
+  
+    .search-bar {
+      width: 100%;
+    }
+  }

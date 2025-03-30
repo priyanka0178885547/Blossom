@@ -1,0 +1,130 @@
+[
+  {
+    "name": "Rose",
+    "scientificName": "Rosa",
+    "price": 20,
+    "lifespan": "5-7 days",
+    "climaticCondition": "Temperate",
+    "imageUrl": "uploads/flowers/rose.jpeg"
+  },
+  {
+    "name": "Tulip",
+    "scientificName": "Tulipa",
+    "price": 15,
+    "lifespan": "7-10 days",
+    "climaticCondition": "Cool",
+    "imageUrl": "uploads/flowers/tulip.jpg"
+  },
+  {
+    "name": "Rebe",
+    "scientificName": "Rebea Floris",
+    "price": 25,
+    "lifespan": "6-8 days",
+    "climaticCondition": "Warm",
+    "imageUrl": "uploads/flowers/rebe.jpeg"
+  },
+  {
+    "name": "Dahlia",
+    "scientificName": "Dahlia Pinnata",
+    "price": 30,
+    "lifespan": "7-14 days",
+    "climaticCondition": "Mild",
+    "imageUrl": "uploads/flowers/dahlia.jpeg"
+  },
+  {
+    "name": "Pansy",
+    "scientificName": "Viola Tricolor",
+    "price": 12,
+    "lifespan": "7-10 days",
+    "climaticCondition": "Cool",
+    "imageUrl": "uploads/flowers/pansy.jpeg"
+  },
+  {
+    "name": "Chocolate Cosmos",
+    "scientificName": "Cosmos Atrosanguineus",
+    "price": 18,
+    "lifespan": "5-7 days",
+    "climaticCondition": "Warm",
+    "imageUrl": "uploads/flowers/chocolate.jpeg"
+  },
+  {
+    "name": "Sakura",
+    "scientificName": "Prunus Serrulata",
+    "price": 50,
+    "lifespan": "1-2 weeks",
+    "climaticCondition": "Temperate",
+    "imageUrl": "uploads/flowers/sakura.jpeg"
+  },
+  {
+    "name": "Cottonrose",
+    "scientificName": "Hibiscus Mutabilis",
+    "price": 22,
+    "lifespan": "3-5 days",
+    "climaticCondition": "Warm",
+    "imageUrl": "uploads/flowers/cottonrose.jpeg"
+  },
+  {
+    "name": "Daffodil",
+    "scientificName": "Narcissus",
+    "price": 10,
+    "lifespan": "6-10 days",
+    "climaticCondition": "Cool",
+    "imageUrl": "uploads/flowers/daffodil.jpeg"
+  },
+  {
+    "name": "Mock Orange",
+    "scientificName": "Philadelphus",
+    "price": 28,
+    "lifespan": "7-12 days",
+    "climaticCondition": "Temperate",
+    "imageUrl": "uploads/flowers/mockorange.jpeg"
+  },
+  {
+    "name": "Phlox",
+    "scientificName": "Phlox Paniculata",
+    "price": 16,
+    "lifespan": "5-7 days",
+    "climaticCondition": "Mild",
+    "imageUrl": "uploads/flowers/phlox.jpeg"
+  },
+  {
+    "name": "Cestrum",
+    "scientificName": "Cestrum Nocturnum",
+    "price": 24,
+    "lifespan": "5-7 days",
+    "climaticCondition": "Warm",
+    "imageUrl": "uploads/flowers/cestrum.jpeg"
+  },
+  {
+    "name": "Corydalis",
+    "scientificName": "Corydalis Solida",
+    "price": 20,
+    "lifespan": "7-10 days",
+    "climaticCondition": "Cool",
+    "imageUrl": "uploads/flowers/corydalis.jpeg"
+  },
+  {
+    "name": "Foxglove",
+    "scientificName": "Digitalis Purpurea",
+    "price": 32,
+    "lifespan": "6-10 days",
+    "climaticCondition": "Cool",
+    "imageUrl": "uploads/flowers/foxglove.jpeg"
+  },
+  {
+    "name": "Cornflower",
+    "scientificName": "Centaurea Cyanus",
+    "price": 18,
+    "lifespan": "5-7 days",
+    "climaticCondition": "Temperate",
+    "imageUrl": "uploads/flowers/cornflower.jpeg"
+  },
+  {
+    "name": "Camellia",
+    "scientificName": "Camellia Japonica",
+    "price": 40,
+    "lifespan": "7-14 days",
+    "climaticCondition": "Mild",
+    "imageUrl": "uploads/flowers/camellia.jpeg"
+  }
+]
