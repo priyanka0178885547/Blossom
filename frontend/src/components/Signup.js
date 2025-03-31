@@ -17,32 +17,37 @@ export default function Signup() {
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
+  
+    if (formData.password.length < 8) {
+      setMessage("Password must be at least 8 characters long.");
+      return;
+    }
+  
     try {
-      // Send the form data to the backend via a POST request
       const response = await fetch("http://localhost:5000/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
-      // If the response is not ok, throw an error
+  
+      const data = await response.json(); // Parse JSON response first
+  
       if (!response.ok) {
-        throw new Error("Signup failed with status " + response.status);
+        setMessage(data.message || "Signup failed."); // Display backend error message
+        return;
       }
-
-      // Parse the response data
-      const data = await response.json();
-      setMessage(data.message); // Display the message from the server
-
-      // If the signup is successful, redirect to the login page
+  
+      setMessage(data.message); // Success message
+  
       if (data.message === "Signup successful!") {
-        navigate("/login"); // Redirect to login page
+        navigate("/login");
       }
     } catch (error) {
-      setMessage("Error: " + error.message); // Display an error message if the request fails
+      setMessage("Error: " + error.message); // Display network error message
     }
   };
+  
 
   // Render the Signup component
   return (
