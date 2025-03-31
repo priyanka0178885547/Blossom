@@ -112,6 +112,7 @@ const dotenv = require("dotenv");
 // const User = require('./models/User');
 const userRoutes = require('./routes/userRoutes');
 const flowerRoutes = require('./routes/flowerRoutes');
+const translateText = require("./utils/translate");
 
 dotenv.config();
 const app = express();
@@ -149,18 +150,46 @@ app.use('/api/users', (req, res, next) => {
 }, userRoutes);
 
 // Login API
+// app.post("/api/blossom/login", async (req, res) => {
+//   const { email, password } = req.body;
+//   try {
+//     const user = await User.findOne({ email });
+//     if (!user || user.password !== password) {
+//       return res.status(400).json({ message: "Invalid email or password." });
+//     }
+//     res.status(200).json({ message: "Login successful!" });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error logging in.", error });
+//   }
+// });
+
+const bcrypt = require('bcrypt');
+
 app.post("/api/blossom/login", async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const user = await User.findOne({ email });
-    if (!user || user.password !== password) {
+    
+    if (!user) {
       return res.status(400).json({ message: "Invalid email or password." });
     }
+
+    // ✅ Compare the entered password with the hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password." });
+    }
+
     res.status(200).json({ message: "Login successful!" });
+
   } catch (error) {
     res.status(500).json({ message: "Error logging in.", error });
   }
 });
+
+
 // // Signup API
 app.post("/api/signup", async (req, res) => {
   const { name, email, password } = req.body;
@@ -173,10 +202,24 @@ app.post("/api/signup", async (req, res) => {
     await user.save();
     res.status(201).json({ message: "Signup successful!" });
   } catch (error) {
-    console.error("Signup Error:", error); // Log to server
+    console.error("Signup Errorr:", error); // Log to server
     res.status(500).json({ message: "Error creating user.", error: error.message });
   }
 });
+
+app.post("/api/translate", async (req, res) => {
+  try {
+    const { text, targetLang } = req.body;
+    if (!text) return res.status(400).json({ message: "Text is required" });
+
+    const translatedText = await translateText(text, targetLang || "en");
+    res.json({ translatedText });
+  } catch (error) {
+    console.error("Translation API Error:", error);
+    res.status(500).json({ message: "Translation failed" });
+  }
+});
+
 
 // Start server
 const PORT = process.env.PORT || 5000;
