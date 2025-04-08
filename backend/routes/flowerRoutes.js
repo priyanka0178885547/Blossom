@@ -1,69 +1,40 @@
 const express = require('express');
-const multer = require('multer');
-const Flower = require('../models/Flower');
 const router = express.Router();
+const flowerController = require('../controllers/flowerController');
+const { authenticateJWT, authorizeRoles } = require('../middleWare/auth');
+const parser = require('../middleWare/multer');
 
-//Configure Multer for multiple image uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/flowers');
+// Seller adds a flower (with image)
+router.post(
+  '/add',
+  authenticateJWT,
+  authorizeRoles('seller'),
+  parser.single('image'),
+  (req, res, next) => {
+    console.log('✅ Route hit, file:', req.file);
+    next();
   },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
+  flowerController.addFlower
+);
 
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
-}).array('images', 10); // Field name should match 'images'
+// Seller views their flowers
+router.get(
+  '/my-flowers',
+  authenticateJWT,
+  authorizeRoles('seller'),
+  flowerController.getMyFlowers
+);
 
-router.post('/bulk-upload', upload, async (req, res) => {
-  try {
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ message: 'No images uploaded' });
-    }
-
-    const flowersData = JSON.parse(req.body.flowers);
-    if (flowersData.length !== req.files.length) {
-      return res.status(400).json({ message: 'Number of images must match flower data' });
-    }
-
-    const flowers = flowersData.map((flower, index) => ({
-      ...flower,
-      imageUrl: `/uploads/flowers/${req.files[index].filename}`,
-    }));
-
-    await Flower.insertMany(flowers);
-    res.status(201).json({ message: 'Flowers uploaded successfully', flowers });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-
-// Get All Flowers
-// router.get('/', async (req, res) => {
-//   try {
-//     const flowers = await Flower.find({});
-//     res.json(flowers);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
-
-
-router.get('/', async (req, res) => {
-  try {
-    // Use the flowerDB connection
-    const FlowerModel = req.flowerDB.model('Flower', Flower.schema);
-    const flowers = await FlowerModel.find({});
-    res.json(flowers);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-
+// Delete flower (optional)
+router.delete(
+  '/delete/:id',
+  authenticateJWT,
+  authorizeRoles('seller'),
+  flowerController.deleteFlower
+);
+router.get(
+  '/all',
+  flowerController.getAllFlowers // No auth, accessible to all
+);
 
 module.exports = router;

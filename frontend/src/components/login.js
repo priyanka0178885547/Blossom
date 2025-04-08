@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css';  
+import './Login.css';
 
 const Login = () => {
   const [user, setUser] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Add class to body on component mount
     document.body.classList.add('login-page');
-    
-    // Remove class on component unmount
     return () => {
       document.body.classList.remove('login-page');
     };
@@ -23,19 +21,36 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
-      const res = await axios.post('http://localhost:5000/api/blossom/login', user);
-      alert(res.data.message);
-      navigate('/shop');
-    } catch (error) {
-      alert(error.response?.data.message || 'Login failed. Try again.');
+      const res = await axios.post('http://localhost:5000/blossom/login', user);
+      const { token, role } = res.data;
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+      console.log('📦 Token:', token);
+      alert('Login successful');
+
+      // Redirect based on role
+      if (role === 'seller') {
+        navigate('/seller/dashboard');
+      } else {
+        navigate('/shop');
+      }
+
+    } catch (err) {
+      console.error('Login error:', err.response);
+      setError(err.response?.data?.message || 'Login failed. Try again.');
     }
   };
-  
+
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
-        <h2>Blossom Login</h2>
+        <h2>Login to Blossom</h2>
+
+        {error && <p className="error-message">{error}</p>}
+
         <div className="form-group">
           <label>Email</label>
           <input
@@ -46,6 +61,7 @@ const Login = () => {
             required
           />
         </div>
+
         <div className="form-group">
           <label>Password</label>
           <input
@@ -56,9 +72,11 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit">Log In</button>
+
+        <button type="submit">Login</button>
+
         <p className="redirect">
-          Don't have an account? <a href="/signup">Sign Up</a>
+          Don’t have an account? <a href="/signup">Sign Up</a>
         </p>
       </form>
     </div>

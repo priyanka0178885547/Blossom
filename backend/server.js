@@ -113,14 +113,25 @@ const dotenv = require("dotenv");
 const userRoutes = require('./routes/userRoutes');
 const flowerRoutes = require('./routes/flowerRoutes');
 const translateText = require("./utils/translate");
+const jwt = require('jsonwebtoken');
 
 dotenv.config();
 const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+// const cors = require("cors");
+
+// Allow requests from your React app
+app.use(cors({
+  origin: "http://localhost:3000", // frontend origin
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+app.options('*', cors());
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/blossom', userRoutes);
 
 // Connect to MongoDB using environment variables
 const userDB = mongoose.createConnection(process.env.USER_DB_URI, {
@@ -138,16 +149,16 @@ userDB.on('connected', () => console.log('Connected to userDetails database'));
 flowerDB.on('connected', () => console.log('Connected to blossom database'));
 
 // Provide flowerDB to your flowerRoutes
-app.use('/api/flowers', (req, res, next) => {
+app.use('/api/flower', (req, res, next) => {
   req.flowerDB = flowerDB;
   next();
 }, flowerRoutes);
 
-// User routes
-app.use('/api/users', (req, res, next) => {
-  req.userDB = userDB;
-  next();
-}, userRoutes);
+// // User routes
+// app.use('/api/blossom', (req, res, next) => {
+//   req.userDB = userDB;
+//   next();
+// }, userRoutes);
 
 // Login API
 // app.post("/api/blossom/login", async (req, res) => {
@@ -165,45 +176,70 @@ app.use('/api/users', (req, res, next) => {
 
 const bcrypt = require('bcrypt');
 
-app.post("/api/blossom/login", async (req, res) => {
-  const { email, password } = req.body;
+// app.post("/api/blossom/login", async (req, res) => {
+//   const { email, password } = req.body;
 
-  try {
-    const user = await User.findOne({ email });
+//   try {
+//     const user = await User.findOne({ email });
     
-    if (!user) {
-      return res.status(400).json({ message: "Invalid email or password." });
-    }
+//     if (!user) {
+//       return res.status(400).json({ message: "Invalid email or password." });
+//     }
 
-    // ✅ Compare the entered password with the hashed password
-    const isMatch = await bcrypt.compare(password, user.password);
+//     // ✅ Compare the entered password with the hashed password
+//     const isMatch = await bcrypt.compare(password, user.password);
 
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password." });
-    }
+//     if (!isMatch) {
+//       return res.status(400).json({ message: "Invalid email or password." });
+//     }
 
-    res.status(200).json({ message: "Login successful!" });
+//     res.status(200).json({ message: "Login successful!" });
 
-  } catch (error) {
-    res.status(500).json({ message: "Error logging in.", error });
-  }
-});
+//   } catch (error) {
+//     res.status(500).json({ message: "Error logging in.", error });
+//   }
+// });
 
 
 // // Signup API
+// app.post("/api/signup", async (req, res) => {
+//   const { name, email, password } = req.body;
+//   try {
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       return res.status(400).json({ message: "Email already registered." });
+//     }
+//     const user = new User({ name, email, password });
+//     await user.save();
+//     res.status(201).json({ message: "Signup successful!" });
+//   } catch (error) {
+//     console.error("Signup Errorr:", error); // Log to server
+//     res.status(500).json({ message: "Error creating user.", error: error.message });
+//   }
+// });
+
+
 app.post("/api/signup", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
+
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already registered." });
     }
-    const user = new User({ name, email, password });
+
+    const user = new User({ name, email, password, role });
     await user.save();
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
     res.status(201).json({ message: "Signup successful!" });
   } catch (error) {
-    console.error("Signup Errorr:", error); // Log to server
-    res.status(500).json({ message: "Error creating user.", error: error.message });
+    console.error("Signup error:", error); // log full error in console
+    res.status(500).json({
+      message: "Error creating user.",
+      error: error.message || error.toString(),
+    });
   }
 });
 
