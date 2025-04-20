@@ -12,6 +12,8 @@ const ShopPage = () => {
   const [wishlist, setWishlist] = useState([]);
   const [selectedColor, setSelectedColor] = useState("");
   const [showColorFilter, setShowColorFilter] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   // Common flower colors for filtering
@@ -20,40 +22,6 @@ const ShopPage = () => {
     "Purple", "Orange", "Blue", "Green",
     "Black", "Multicolor"
   ];
-
-  // Fetch all flowers
-  useEffect(() => {
-    const fetchFlowers = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/api/flower/all");
-        setFlowers(response.data.flowers);
-      } catch (error) {
-        console.error("Error fetching flowers:", error);
-      }
-    };
-    fetchFlowers();
-  }, []);
-
-  // Load wishlist and cart from localStorage on mount
-  useEffect(() => {
-    try {
-      const storedWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
-      setWishlist(storedWishlist);
-    } catch (error) {
-      console.warn("Failed to parse wishlist from localStorage:", error);
-      setWishlist([]);
-    }
-  
-    try {
-      const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-      setCart(storedCart);
-    } catch (error) {
-      console.warn("Failed to parse cart from localStorage:", error);
-      setCart([]);
-    }
-  }, []);
-
-  // Handle translation with debounce
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
       if (!searchTerm) {
@@ -70,6 +38,8 @@ const ShopPage = () => {
           setTranslatedSearch(response.data.translatedText.toLowerCase());
         } catch (error) {
           console.error("Translation Error:", error);
+          // Fallback to original search term if translation fails
+          setTranslatedSearch(searchTerm.toLowerCase());
         }
       };
 
@@ -79,25 +49,61 @@ const ShopPage = () => {
     return () => clearTimeout(debounceTimeout);
   }, [searchTerm]);
 
-  const userId = localStorage.getItem("userId");
+  // Make sure to actually use translatedSearch in your filter function
+  const filteredFlowers = flowers.filter((flower) => {
+    const searchQuery = translatedSearch || searchTerm.toLowerCase();
+    const matchesSearch = 
+      flower?.name?.toLowerCase().includes(searchQuery) || 
+      flower?.color?.toLowerCase().includes(searchQuery);
+    
+    const matchesColor = !selectedColor || 
+      flower?.color?.toLowerCase() === selectedColor.toLowerCase();
+    
+    return matchesSearch && matchesColor;
+  });
+  // Fetch all flowers with error handling
+  useEffect(() => {
+    const fetchFlowers = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get("http://localhost:5000/api/flower/all");
+        setFlowers(response.data?.flowers || []);  // Ensure we always have an array
+      } catch (error) {
+        console.error("Error fetching flowers:", error);
+        setError("Failed to load flowers. Please try again later.");
+        setFlowers([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchFlowers();
+  }, []);
 
-  const toggleWishlist = async (flowerId) => {
+  // Load wishlist and cart from localStorage on mount with error handling
+  useEffect(() => {
     try {
-      const response = await axios.post("http://localhost:5000/api/wishlist/add", {
-        userId,
-        flowerId,
-      });
-      setWishlist(response.data.wishlist.flowers);
-      localStorage.setItem("wishlist", JSON.stringify(response.data.wishlist.flowers));
+      const storedWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+      setWishlist(Array.isArray(storedWishlist) ? storedWishlist : []);
     } catch (error) {
-      console.error("Wishlist error:", error);
+      console.warn("Failed to parse wishlist from localStorage:", error);
+      setWishlist([]);
     }
-  };
   
+    try {
+      const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+      setCart(Array.isArray(storedCart) ? storedCart : []);
+    } catch (error) {
+      console.warn("Failed to parse cart from localStorage:", error);
+      setCart([]);
+    }
+  }, []);
+
+  // Add to cart function
   const addToCart = async (flower) => {
     try {
       const response = await axios.post("http://localhost:5000/api/cart/add", {
-        userId,
+        userId: localStorage.getItem("userId"),
         flowerId: flower._id,
       });
       setCart(response.data.flowerIds);
@@ -107,17 +113,20 @@ const ShopPage = () => {
     }
   };
 
-  // Filter flowers based on search and color
-  const filteredFlowers = flowers.filter((flower) => {
-    const matchesSearch = flower?.name?.toLowerCase().includes(translatedSearch) || 
-                         flower?.color?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesColor = !selectedColor || 
-                        flower?.color?.toLowerCase() === selectedColor.toLowerCase();
-    
-    return matchesSearch && matchesColor;
-  });
-
+  // Toggle wishlist function
+  const toggleWishlist = async (flowerId) => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/wishlist/add", {
+        userId: localStorage.getItem("userId"),
+        flowerId,
+      });
+      setWishlist(response.data.wishlist.flowers);
+      localStorage.setItem("wishlist", JSON.stringify(response.data.wishlist.flowers));
+    } catch (error) {
+      console.error("Wishlist error:", error);
+    }
+  };
+ 
   return (
     <div className="shop-container">
       <nav className="shop-header">
@@ -176,12 +185,12 @@ const ShopPage = () => {
         <div className="icon-group">
           <span className="icon-btn" onClick={() => navigate("/wishlist")}>
             <FaHeart className="nav-icon" title="Wishlist" />
-            {wishlist.length > 0 && <span className="cart-count">{wishlist.length}</span>}
+            {wishlist?.length > 0 && <span className="cart-count">{wishlist.length}</span>}
           </span>
 
           <span className="icon-btn" onClick={() => navigate("/cart")}>
             <FaShoppingCart className="nav-icon" title="Cart" />
-            {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
+            {cart?.length > 0 && <span className="cart-count">{cart.length}</span>}
           </span>
 
           <button className="logout-btn" onClick={() => navigate("/")}>
@@ -190,7 +199,11 @@ const ShopPage = () => {
         </div>
       </nav>
 
-      {filteredFlowers.length === 0 ? (
+      {isLoading ? (
+        <div className="loading-message">Loading flowers...</div>
+      ) : error ? (
+        <div className="error-message">{error}</div>
+      ) : filteredFlowers?.length === 0 ? (
         <p className="no-results">
           {selectedColor 
             ? `No ${selectedColor} flowers found. Try a different color or search term.`
@@ -198,13 +211,15 @@ const ShopPage = () => {
         </p>
       ) : (
         <div className="flower-grid">
-          {filteredFlowers.map((flower) => (
+          {filteredFlowers?.map((flower) => (
             <div key={flower._id} className="flower-card">
               <img src={flower.image} alt={flower.name} className="flower-image" />
               
-              <div className="flower-color-badge" style={{ backgroundColor: flower.color?.toLowerCase() }}>
-                {flower.color}
-              </div>
+              {flower.color && (
+                <div className="flower-color-badge" style={{ backgroundColor: flower.color.toLowerCase() }}>
+                  {flower.color}
+                </div>
+              )}
 
               <div className="flower-actions">
                 <button className="add-to-cart-btn" onClick={() => addToCart(flower)}>
@@ -213,7 +228,7 @@ const ShopPage = () => {
                 <span className="like-icon" onClick={() => toggleWishlist(flower._id)}>
                   <FaHeart
                     className="heart-icon"
-                    color={wishlist.includes(flower._id) ? "red" : "#ccc"}
+                    color={wishlist?.includes(flower._id) ? "red" : "#ccc"}
                     size={22}
                   />
                 </span>
