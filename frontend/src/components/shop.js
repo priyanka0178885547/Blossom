@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Shop.css";
-import { FaShoppingCart, FaHeart } from "react-icons/fa";
+import { FaShoppingCart, FaHeart, FaFilter } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const ShopPage = () => {
@@ -11,7 +10,16 @@ const ShopPage = () => {
   const [translatedSearch, setTranslatedSearch] = useState("");
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [showColorFilter, setShowColorFilter] = useState(false);
   const navigate = useNavigate();
+
+  // Common flower colors for filtering
+  const flowerColors = [
+    "Red", "Pink", "White", "Yellow", 
+    "Purple", "Orange", "Blue", "Green",
+    "Black", "Multicolor"
+  ];
 
   // Fetch all flowers
   useEffect(() => {
@@ -44,7 +52,6 @@ const ShopPage = () => {
       setCart([]);
     }
   }, []);
-  
 
   // Handle translation with debounce
   useEffect(() => {
@@ -61,7 +68,6 @@ const ShopPage = () => {
             targetLang: "en",
           });
           setTranslatedSearch(response.data.translatedText.toLowerCase());
-          console.log("Translated Text:", response.data.translatedText);
         } catch (error) {
           console.error("Translation Error:", error);
         }
@@ -81,9 +87,8 @@ const ShopPage = () => {
         userId,
         flowerId,
       });
-      setWishlist(response.data.wishlist.flowers); // ✅ Correct path
+      setWishlist(response.data.wishlist.flowers);
       localStorage.setItem("wishlist", JSON.stringify(response.data.wishlist.flowers));
-            localStorage.setItem("wishlist", JSON.stringify(response.data.flowerIds));  // Persist to localStorage
     } catch (error) {
       console.error("Wishlist error:", error);
     }
@@ -96,39 +101,89 @@ const ShopPage = () => {
         flowerId: flower._id,
       });
       setCart(response.data.flowerIds);
-      localStorage.setItem("cart", JSON.stringify(response.data.flowerIds));  // Persist to localStorage
+      localStorage.setItem("cart", JSON.stringify(response.data.flowerIds));
     } catch (error) {
       console.error("Cart error:", error);
     }
   };
 
-  // Filter flowers based on search
-  const filteredFlowers = flowers.filter((flower) =>
-    flower?.name?.toLowerCase().includes(translatedSearch)
-  );
+  // Filter flowers based on search and color
+  const filteredFlowers = flowers.filter((flower) => {
+    const matchesSearch = flower?.name?.toLowerCase().includes(translatedSearch) || 
+                         flower?.color?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesColor = !selectedColor || 
+                        flower?.color?.toLowerCase() === selectedColor.toLowerCase();
+    
+    return matchesSearch && matchesColor;
+  });
 
   return (
     <div className="shop-container">
       <nav className="shop-header">
         <h1 className="shop-title">Blossom Shop</h1>
 
-        <input
-          type="text"
-          placeholder="Search flowers..."
-          className="search-bar"
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="search-filter-container">
+          <input
+            type="text"
+            placeholder="Search flowers by name or color..."
+            className="search-bar"
+            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm}
+          />
+          
+          <div className="color-filter-wrapper">
+            <button 
+              className="filter-btn"
+              onClick={() => setShowColorFilter(!showColorFilter)}
+            >
+              <FaFilter /> 
+              {selectedColor && <span className="active-filter">{selectedColor}</span>}
+            </button>
+            
+            {showColorFilter && (
+              <div className="color-filter-dropdown">
+                <div 
+                  className="color-option" 
+                  onClick={() => {
+                    setSelectedColor("");
+                    setShowColorFilter(false);
+                  }}
+                >
+                  All Colors
+                </div>
+                {flowerColors.map((color) => (
+                  <div 
+                    key={color}
+                    className="color-option"
+                    onClick={() => {
+                      setSelectedColor(color);
+                      setShowColorFilter(false);
+                    }}
+                  >
+                    <span 
+                      className="color-swatch" 
+                      style={{ backgroundColor: color.toLowerCase() }}
+                    />
+                    {color}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
 
         <div className="icon-group">
           <span className="icon-btn" onClick={() => navigate("/wishlist")}>
             <FaHeart className="nav-icon" title="Wishlist" />
+            {wishlist.length > 0 && <span className="cart-count">{wishlist.length}</span>}
           </span>
 
           <span className="icon-btn" onClick={() => navigate("/cart")}>
             <FaShoppingCart className="nav-icon" title="Cart" />
+            {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
           </span>
 
-          {/* Logout Button */}
           <button className="logout-btn" onClick={() => navigate("/")}>
             Logout
           </button>
@@ -136,14 +191,21 @@ const ShopPage = () => {
       </nav>
 
       {filteredFlowers.length === 0 ? (
-        <p className="no-results">No flowers found. Try a different search term.</p>
+        <p className="no-results">
+          {selectedColor 
+            ? `No ${selectedColor} flowers found. Try a different color or search term.`
+            : "No flowers found. Try a different search term."}
+        </p>
       ) : (
         <div className="flower-grid">
           {filteredFlowers.map((flower) => (
             <div key={flower._id} className="flower-card">
               <img src={flower.image} alt={flower.name} className="flower-image" />
+              
+              <div className="flower-color-badge" style={{ backgroundColor: flower.color?.toLowerCase() }}>
+                {flower.color}
+              </div>
 
-              {/* ❤️ Wishlist Icon beside Add to Cart */}
               <div className="flower-actions">
                 <button className="add-to-cart-btn" onClick={() => addToCart(flower)}>
                   Add to Cart

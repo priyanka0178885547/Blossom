@@ -66,7 +66,7 @@ const WishlistPage = () => {
               <img src={flower.image} alt={flower.name} className="wishlist-image" />
               <div className="wishlist-details">
                 <h2>{flower.name}</h2>
-                <p>Price: ${flower.price}</p>
+                <p>Price: ₹{flower.price}</p>
                 <button className="remove-btn" onClick={() => handleRemove(flower._id)}>
                   Remove
                 </button>

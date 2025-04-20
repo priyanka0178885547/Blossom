@@ -1,11 +1,16 @@
 /* Wishlist.css */
 
-.wishlist-grid {
+/* Wishlist Card - Fixed Height Version */
+.wishlist-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
   display: flex;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  padding: 1rem 0;
-  width: 100%; /* Ensure grid takes full width */
+  flex-direction: column;
+  height: 400px; /* Fixed height for all cards */
+  width: 280px; /* Fixed width if needed */
 }
 
 /* Add container width enforcement */
@@ -65,13 +70,14 @@
   border-radius: 10px;
 }
 
-/* Wishlist Grid
+/* //Wishlist Grid */
 .wishlist-grid {
-  display: grid;
+  display: flex;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
   padding: 1rem 0;
-} */
+  width: 80vw;
+}
 
 /* Wishlist Card */
 .wishlist-card {
@@ -90,9 +96,10 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
+
 .wishlist-image {
   width: 100%;
-  height: 200px;
+  height: 250px; /* Fixed image height */
   object-fit: cover;
   transition: transform 0.3s ease;
 }
@@ -106,18 +113,28 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  /* Add these to handle overflow */
+  overflow: hidden;
 }
-
 .wishlist-details h2 {
   font-size: 1.3rem;
   margin: 0 0 0.5rem 0;
   color: #2c3e50;
+  /* Prevent text overflow */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .wishlist-details p {
   margin: 0.3rem 0;
   color: #7f8c8d;
   font-size: 0.95rem;
+  /* Handle multiline text with overflow */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .remove-btn {
