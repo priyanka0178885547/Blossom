@@ -24,11 +24,14 @@ const Login = () => {
     setError('');
     try {
       const res = await axios.post('http://localhost:5000/blossom/login', user);
-      const { token, role } = res.data;
+      const { token, role ,userId} = res.data;
       
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
+      localStorage.setItem("userId", res.data.userId); // Assuming `response.data.userId` is the userId returned by the API.
       console.log('📦 Token:', token);
+      console.log('📦 userid:',  userId);
+
       alert('Login successful');
 
       // Redirect based on role

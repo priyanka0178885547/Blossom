@@ -29,7 +29,7 @@ import About from './components/about';
 import Shop from './components/shop';
 import WishlistPage from "./components/wishlistPage";
 import SellerDashboard from './components/seller/Dashboard';
-
+import Cart from "./components/Cart";
 export default function App() {
   return (
     <Routes>
@@ -41,6 +41,7 @@ export default function App() {
       <Route path="/shop" element={<Shop />} />
       <Route path="/seller/dashboard" element={<SellerDashboard />} />
       <Route path="/wishlist" element={<WishlistPage />} />
+      <Route path="/cart" element = {<Cart/>}/>
     </Routes>
   );
 }

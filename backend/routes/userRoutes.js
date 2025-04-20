@@ -54,12 +54,14 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-// Assuming you already fetched the user and created the JWT
-res.status(200).json({
-  message: "Login successful!",
-  token,
-  role: user.role, // ✅ send back the role
-});
+
+    // Send the userId, token, and role in the response
+    res.status(200).json({
+      message: "Login successful!",
+      token,
+      userId: user._id,  // Send the userId in the response
+      role: user.role,    // Send the role in the response
+    });
 
   } catch (error) {
     console.error("Login error:", error);

@@ -74,7 +74,7 @@
 // };
 
 
-const flowerSchema = require('../models/Flower');
+const { flowerSchema } = require('../models/Flower');
 const cloudinary = require('../config/cloudinary');
 
 // Add Flower (Seller only)
