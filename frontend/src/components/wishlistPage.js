@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Wishlist.css";
+import "./wishlist.css";
 import { useNavigate } from "react-router-dom";
 
 const WishlistPage = () => {

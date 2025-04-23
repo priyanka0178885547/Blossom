@@ -100,6 +100,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'poppins', Arial, sans-serif;
+  gap:10px;
 }
 
 /* Apply Background for Signup Page */
