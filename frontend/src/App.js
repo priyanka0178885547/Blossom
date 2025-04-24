@@ -30,19 +30,23 @@ import Shop from './components/shop';
 import WishlistPage from "./components/wishlistPage";
 import SellerDashboard from './components/seller/Dashboard';
 import Cart from "./components/Cart";
+import { UserProvider } from './UserContext';
+ // ✅ Import context
+
 export default function App() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Home />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/shop" element={<Shop />} />
-      <Route path="/seller/dashboard" element={<SellerDashboard />} />
-      <Route path="/wishlist" element={<WishlistPage />} />
-      <Route path="/cart" element = {<Cart/>}/>
-    </Routes>
+    <UserProvider> {/* ✅ Wrap your whole app in context provider */}
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/seller/dashboard" element={<SellerDashboard />} />
+        <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/cart" element={<Cart />} />
+      </Routes>
+    </UserProvider>
   );
 }
-

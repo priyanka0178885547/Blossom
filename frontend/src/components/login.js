@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useContext } from 'react';
+import { UserContext } from '../UserContext';
+
+
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
@@ -6,6 +10,8 @@ import './Login.css';
 const Login = () => {
   const [user, setUser] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const { setWishlist } = useContext(UserContext);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +37,12 @@ const Login = () => {
       localStorage.setItem("userId", res.data.userId); // Assuming `response.data.userId` is the userId returned by the API.
       console.log('📦 Token:', token);
       console.log('📦 userid:',  userId);
+      localStorage.setItem('userName', res.data.name); // assuming response has user's name
+      setWishlist([]);  // Clear the previous wishlist data (if any)
+
+      // Fetch the new user's wishlist
+      const wishlistResponse = await axios.get(`http://localhost:5000/api/wishlist/${userId}`);
+      setWishlist(wishlistResponse.data);
 
       alert('Login successful');
 
@@ -38,6 +50,7 @@ const Login = () => {
       if (role === 'seller') {
         navigate('/seller/dashboard');
       } else {
+        
         navigate('/shop');
       }
 

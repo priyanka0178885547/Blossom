@@ -61,6 +61,7 @@ router.post("/login", async (req, res) => {
       token,
       userId: user._id,  // Send the userId in the response
       role: user.role,    // Send the role in the response
+      userName : user.name,
     });
 
   } catch (error) {

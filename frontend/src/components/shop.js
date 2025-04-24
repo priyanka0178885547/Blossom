@@ -15,6 +15,7 @@ const ShopPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const userName = localStorage.getItem('userName') || 'Seller';
 
   // Common flower colors for filtering
   const flowerColors = [
@@ -81,51 +82,119 @@ const ShopPage = () => {
   }, []);
 
   // Load wishlist and cart from localStorage on mount with error handling
-  useEffect(() => {
-    try {
-      const storedWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
-      setWishlist(Array.isArray(storedWishlist) ? storedWishlist : []);
-    } catch (error) {
-      console.warn("Failed to parse wishlist from localStorage:", error);
-      setWishlist([]);
-    }
-  
-    try {
-      const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-      setCart(Array.isArray(storedCart) ? storedCart : []);
-    } catch (error) {
-      console.warn("Failed to parse cart from localStorage:", error);
-      setCart([]);
-    }
-  }, []);
+ // Load wishlist on mount
+useEffect(() => {
+  try {
+    const stored = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    setWishlist(Array.isArray(stored) ? stored : []);
+  } catch (error) {
+    console.warn("Wishlist load error:", error);
+    setWishlist([]);
+  }
+}, []);
+
+// Load cart on mount
+useEffect(() => {
+  try {
+    const stored = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCart(Array.isArray(stored) ? stored : []);
+  } catch (error) {
+    console.warn("Cart load error:", error);
+    setCart([]);
+  }
+}, []);
 
   // Add to cart function
+  // const addToCart = async (flower) => {
+  //   try {
+  //     const response = await axios.post("http://localhost:5000/api/cart/add", {
+  //       userId: localStorage.getItem("userId"),
+  //       flowerId: flower._id,
+  //     });
+  //     setCart(response.data.flowerIds);
+  //     localStorage.setItem("cart", JSON.stringify(response.data.flowerIds));
+  //   } catch (error) {
+  //     console.error("Cart error:", error);
+  //   }
+  // };
   const addToCart = async (flower) => {
     try {
+      const userId = localStorage.getItem("userId");
+      
+      // 1. Optimistically update UI immediately
+      setCart(prevCart => {
+        const newCart = [...prevCart, flower._id];
+        localStorage.setItem("cart", JSON.stringify(newCart));
+        return newCart;
+      });
+  
+      // 2. Make API call
       const response = await axios.post("http://localhost:5000/api/cart/add", {
-        userId: localStorage.getItem("userId"),
+        userId: userId,
         flowerId: flower._id,
       });
-      setCart(response.data.flowerIds);
-      localStorage.setItem("cart", JSON.stringify(response.data.flowerIds));
+  
+      // 3. Verify server response and sync
+      if (response.data?.flowerIds) {
+        // Only update if server response differs from our optimistic update
+        if (JSON.stringify(response.data.flowerIds) !== JSON.stringify([...cart, flower._id])) {
+          setCart(response.data.flowerIds);
+          localStorage.setItem("cart", JSON.stringify(response.data.flowerIds));
+        }
+      }
+  
+      // 4. Visual feedback
+      document.querySelector('.cart-count').classList.add('pulse');
+      setTimeout(() => {
+        document.querySelector('.cart-count')?.classList.remove('pulse');
+      }, 500);
+  
     } catch (error) {
       console.error("Cart error:", error);
+      // Revert on error
+      setCart(prevCart => prevCart.filter(id => id !== flower._id));
+      localStorage.setItem("cart", JSON.stringify(cart.filter(id => id !== flower._id)));
     }
   };
 
   // Toggle wishlist function
+  // const toggleWishlist = async (flowerId) => {
+  //   try {
+  //     const response = await axios.post("http://localhost:5000/api/wishlist/add", {
+  //       userId: localStorage.getItem("userId"),
+  //       flowerId,
+  //     });
+  //     setWishlist(response.data.wishlist.flowers);
+  //     localStorage.setItem("wishlist", JSON.stringify(response.data.wishlist.flowers));
+  //   } catch (error) {
+  //     console.error("Wishlist error:", error);
+  //   }
+  // };
   const toggleWishlist = async (flowerId) => {
+    const userId = localStorage.getItem("userId");
+  
     try {
-      const response = await axios.post("http://localhost:5000/api/wishlist/add", {
-        userId: localStorage.getItem("userId"),
+      // Check if flower is already in wishlist
+      const isInWishlist = wishlist.includes(flowerId);
+  
+      // Choose endpoint based on presence in wishlist
+      const endpoint = isInWishlist
+        ? "http://localhost:5000/api/wishlist/remove"
+        : "http://localhost:5000/api/wishlist/add";
+  
+      const response = await axios.post(endpoint, {
+        userId,
         flowerId,
       });
+  
+      // Update the wishlist in state and localStorage
       setWishlist(response.data.wishlist.flowers);
       localStorage.setItem("wishlist", JSON.stringify(response.data.wishlist.flowers));
     } catch (error) {
-      console.error("Wishlist error:", error);
+      console.error("Wishlist toggle error:", error);
     }
   };
+  
  
   return (
     <div className="shop-container">
