@@ -1,0 +1,422 @@
+/* SellerOrders.module.css */
+
+/* Color Variables */
+:root {
+    --primary: #7c3aed;
+    --primary-light: #a78bfa;
+    --primary-dark: #5b21b6;
+    --secondary: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --light: #f9fafb;
+    --dark: #1f2937;
+    --gray: #6b7280;
+    --gray-light: #e5e7eb;
+    --white: #ffffff;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --transition: all 0.2s ease;
+    --border-radius: 8px;
+  }
+  
+  /* Base Styles */
+  .sellerOrdersContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  
+  /* Header Section */
+  .headerSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .headerSection h1 {
+    font-size: 1.75rem;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+  
+  /* Search Container */
+  .searchContainer {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid var(--gray-light);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+    background-color: var(--light);
+  }
+  
+  .searchInput:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    background-color: var(--white);
+  }
+  
+  .searchIcon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+  }
+  
+  /* Order Card */
+  .orderCard {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: var(--transition);
+  }
+  
+  .orderCard:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .orderHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: var(--light);
+    border-bottom: 1px solid var(--gray-light);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .orderId {
+    font-weight: 600;
+    color: var(--dark);
+  }
+  
+  .orderDate {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+    font-size: 0.875rem;
+  }
+  
+  /* Status Badges */
+  .statusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .statusBadgePending {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning);
+  }
+  
+  .statusBadgeAccepted {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--secondary);
+  }
+  
+  .statusBadgeRejected {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    /* width: 10vw;
+    display: flex;
+    /* height: 7vh;  */
+    justify-content: center;
+  }
+  
+  /* Customer Info */
+  .customerInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-bottom: 1px dashed var(--gray-light);
+  }
+  
+  .customerIcon {
+    font-size: 1.5rem;
+    color: var(--primary);
+    background-color: rgba(124, 58, 237, 0.1);
+    padding: 0.75rem;
+    border-radius: 50%;
+  }
+  
+  .customerInfo h4 {
+    margin: 0 0 0.25rem 0;
+    color: var(--dark);
+  }
+  
+  .customerEmail {
+    margin: 0;
+    color: var(--gray);
+    font-size: 0.875rem;
+  }
+  
+  /* Order Items */
+  .orderItems {
+    padding: 1.5rem;
+  }
+  
+  .orderItems h4 {
+    margin: 0 0 1rem 0;
+    color: var(--dark);
+    font-size: 1.125rem;
+  }
+  
+  .orderItem {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px dashed var(--gray-light);
+  }
+  
+  .orderItem:last-child {
+    border-bottom: none;
+  }
+  
+  .itemImageContainer {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background-color: var(--light);
+  }
+  
+  .itemImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .imagePlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-light);
+    font-size: 1.5rem;
+  }
+  
+  .itemDetails {
+    flex: 1;
+  }
+  
+  .itemDetails h5 {
+    margin: 0 0 0.5rem 0;
+    color: var(--dark);
+  }
+  
+  .itemMeta {
+    display: flex;
+    gap: 1rem;
+    color: var(--gray);
+    font-size: 0.875rem;
+  }
+  
+  /* Order Footer */
+  .orderFooter {
+    padding: 1rem 1.5rem;
+    text-align: right;
+    border-top: 1px dashed var(--gray-light);
+  }
+  
+  .orderTotal {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 1.125rem;
+  }
+  
+  /* Empty State */
+  .emptyState {
+    text-align: center;
+    padding: 3rem;
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .emptyIcon {
+    font-size: 3rem;
+    color: var(--gray-light);
+    margin-bottom: 1rem;
+  }
+  
+  .emptyState h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--dark);
+  }
+  
+  .emptyState p {
+    margin: 0;
+    color: var(--gray);
+  }
+  
+  /* Loading State */
+  .loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+  }
+  
+  .loadingSpinner {
+    width: 3rem;
+    height: 3rem;
+    border: 3px solid rgba(124, 58, 237, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Error State */
+  .errorContainer {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+  }
+  
+  .errorCard {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    padding: 2rem;
+    text-align: center;
+    max-width: 400px;
+  }
+  
+  .errorIcon {
+    font-size: 3rem;
+    color: var(--danger);
+    margin-bottom: 1rem;
+  }
+  
+  .errorCard h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--dark);
+  }
+  
+  .errorCard p {
+    color: var(--gray);
+    margin: 0 0 1.5rem 0;
+  }
+  
+  .retryButton {
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .retryButton:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .sellerOrdersContainer {
+      padding: 1.5rem;
+    }
+    
+    .orderHeader {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .orderDate {
+      margin-left: auto;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .sellerOrdersContainer {
+      padding: 1rem;
+    }
+    
+    .itemMeta {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+  }
+  /* Status Controls */
+.statusControls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.statusButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.approveButton {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--secondary);
+}
+
+.approveButton:hover:not(:disabled) {
+  background-color: rgba(16, 185, 129, 0.2);
+}
+
+.approveButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -104,19 +104,7 @@ useEffect(() => {
   }
 }, []);
 
-  // Add to cart function
-  // const addToCart = async (flower) => {
-  //   try {
-  //     const response = await axios.post("http://localhost:5000/api/cart/add", {
-  //       userId: localStorage.getItem("userId"),
-  //       flowerId: flower._id,
-  //     });
-  //     setCart(response.data.flowerIds);
-  //     localStorage.setItem("cart", JSON.stringify(response.data.flowerIds));
-  //   } catch (error) {
-  //     console.error("Cart error:", error);
-  //   }
-  // };
+
   const addToCart = async (flower) => {
     try {
       const userId = localStorage.getItem("userId");
@@ -157,19 +145,7 @@ useEffect(() => {
     }
   };
 
-  // Toggle wishlist function
-  // const toggleWishlist = async (flowerId) => {
-  //   try {
-  //     const response = await axios.post("http://localhost:5000/api/wishlist/add", {
-  //       userId: localStorage.getItem("userId"),
-  //       flowerId,
-  //     });
-  //     setWishlist(response.data.wishlist.flowers);
-  //     localStorage.setItem("wishlist", JSON.stringify(response.data.wishlist.flowers));
-  //   } catch (error) {
-  //     console.error("Wishlist error:", error);
-  //   }
-  // };
+
   const toggleWishlist = async (flowerId) => {
     const userId = localStorage.getItem("userId");
   

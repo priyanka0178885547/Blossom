@@ -175,7 +175,6 @@
 .heart-icon:hover {
   transform: scale(1.2);
 }
-/* Search and Filter Styles */
 .search-filter-container {
   display: flex;
   align-items: center;
@@ -245,7 +244,6 @@
   border: 1px solid #ddd;
 }
 
-/* Flower Card Color Badge */
 .flower-color-badge {
   position: absolute;
   top: 10px;
@@ -259,7 +257,6 @@
   background-color: #4caf50;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .search-filter-container {
     flex-direction: column;

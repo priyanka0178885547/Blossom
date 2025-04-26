@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./wishlist.css";
+import "./Wishlist.css";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaShoppingCart, FaTrash } from "react-icons/fa";
 

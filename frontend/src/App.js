@@ -29,7 +29,11 @@ import About from './components/about';
 import Shop from './components/shop';
 import WishlistPage from "./components/wishlistPage";
 import SellerDashboard from './components/seller/Dashboard';
+import AddFlower from './components/AddFlower';
 import Cart from "./components/Cart";
+import Order from "./components/OrderPage";
+import SellerOrders from './components/seller/SellerOrders';
+
 import { UserProvider } from './UserContext';
  // ✅ Import context
 
@@ -46,6 +50,11 @@ export default function App() {
         <Route path="/seller/dashboard" element={<SellerDashboard />} />
         <Route path="/wishlist" element={<WishlistPage />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/AddFlower" element={<AddFlower />} />
+        <Route path="/orders" element={<Order />} />
+        <Route path="/SellerOrders" element={<SellerOrders />} />
+
+
       </Routes>
     </UserProvider>
   );

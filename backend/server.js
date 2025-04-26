@@ -230,15 +230,18 @@ const translateText = require("./utils/translate");
 const jwt = require('jsonwebtoken');
 const cartRoutes = require("./routes/CartRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes1");
+console.log("hello");
 const wishlistDB = mongoose.createConnection(process.env.WISHLIST_DB_URI, { /* config */ });
 
 const Wishlist = require('./models/wishlist')(wishlistDB);
 
 dotenv.config();
 const app = express();
+// console.log('__dirname:', __dirname);  // Check where your code is running from
 
 // Middleware
 app.use(express.json());
+// console.log(process.env);  // This will print all environment variables
 
 // Allow requests from your React app
 app.use(cors({
@@ -303,6 +306,17 @@ app.use("/api/cart", (req, res, next) => {
   next();
 }, require("./routes/CartRoutes"));
 
+console.log("hello");
+// Ensure the model is only registered once with flowerDB connection
+const Order = flowerDB.model("Order", require('./models/Order').schema);
+
+// Middleware to pass the correct models to routes
+app.use("/api/orders", (req, res, next) => {
+  req.Order = Order;  // Use the correctly initialized Order model
+  req.flowerDB = flowerDB.model("Flower");
+  req.User = userDB.model("User");
+  next();
+}, require("./routes/OrderRoutes"));
 
 app.post("/api/signup", async (req, res) => {
   const { name, email, password, role } = req.body;

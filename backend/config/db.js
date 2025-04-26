@@ -1,13 +1,28 @@
 const mongoose = require('mongoose');
+const userModel = require('../models/User');
+const flowerModel = require('../models/Flower');
+const { schema: orderSchema } = require('../models/Order');
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect('mongodb://localhost:27017/blossom');
-    console.log('MongoDB connected successfully');
-  } catch (error) {
-    console.error('MongoDB connection failed:', error.message);
-    process.exit(1); // Exit on failure
-  }
+// Connections
+const blossomDB = mongoose.createConnection(process.env.FLOWER_DB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const userDetailsDB = mongoose.createConnection(process.env.USER_DB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// Models from each DB
+const User = userModel(userDetailsDB); // 👈 User from userDetails DB
+const Flower = flowerModel(blossomDB); // 👈 Flower from blossom DB
+const Order = blossomDB.model('Order', orderSchema); // 👈 Order from blossom DB
+
+module.exports = {
+  blossomDB,
+  userDetailsDB,
+  User,
+  Flower,
+  Order,
 };
-
-module.exports = connectDB;

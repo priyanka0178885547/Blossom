@@ -49,6 +49,7 @@ module.exports = (connection) => {
     image: { type: String, required: true },
     imagePublicId: { type: String, required: true },
     seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    sold: { type: Number, default: 0 } // <-- add this
   });
 
   return connection.model('Flower', flowerSchema);
