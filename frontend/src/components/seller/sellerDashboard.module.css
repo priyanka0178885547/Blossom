@@ -218,285 +218,477 @@
   margin-right: 0.75rem;
   font-size: 1.25rem;
 }
-
-/* Dashboard Header */
+/* Dashboard Header Styles */
 .dashboardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.5rem 0;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.dashboardHeader h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--dark);
+.headerTitleContainer {
+  max-width: 60%;
+}
+
+.headerTitle {
+  font-size: 2.2rem;
   margin: 0;
+  position: relative;
+  display: inline-block;
+}
+
+.titleGradient {
+  background: linear-gradient(90deg, #8e44ad, #e84393, #2ecc71);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+
+.flowerDecor {
+  position: absolute;
+  top: -15px;
+  right: -25px;
+  font-size: 1.8rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.headerSubtitle {
+  color: #777;
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
 }
 
 .headerActions {
   display: flex;
-  gap: 0.75rem;
-}
-
-/* Buttons */
-.refreshBtn, .addFlowerBtn {
-  display: inline-flex;
+  gap: 1rem;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  border-radius: var(--border-radius);
-  font-size: 0.9375rem;
-  font-weight: 500;
+}
+
+.headerButton {
+  position: relative;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  z-index: 1;
 }
 
-.addFlowerBtn {
-  background-color: var(--primary);
-  color: var(--white);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+.headerButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
-.addFlowerBtn:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.buttonIcon {
+  font-size: 1.1rem;
 }
 
+.buttonText {
+  position: relative;
+  z-index: 2;
+}
+
+.buttonHoverEffect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.2) 50%);
+  background-size: 300% 300%;
+  background-position: right bottom;
+  transition: all 0.3s ease;
+  z-index: 1;
+  border-radius: 50px;
+}
+
+.headerButton:hover:not(:disabled) .buttonHoverEffect {
+  background-position: left top;
+}
+
+/* Refresh Button */
 .refreshBtn {
-  background-color: var(--light);
-  color: var(--dark);
-  border: 1px solid var(--gray-light);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: #4a5568;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-.refreshBtn:hover {
-  background-color: var(--gray-light);
+.refreshBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Add Flower Button */
+.addFlowerBtn {
+  background: linear-gradient(135deg, #8e44ad 0%, #e84393 100%);
+  color: white;
+  box-shadow: 0 4px 6px rgba(142, 68, 173, 0.2);
+}
+
+.addFlowerBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(142, 68, 173, 0.3);
+}
+
+/* Spinning Animation */
 .spinning {
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-/* Stats Cards */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+/* Stats Cards Container */
 .statsCards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.25rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
 }
 
+/* Base Card Style */
 .statCard {
-  background-color: var(--white);
-  border-radius: var(--border-radius);
+  position: relative;
   padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
+  border-radius: 16px;
+  overflow: hidden;
+  color: white;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  z-index: 1;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
 }
 
 .statCard:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 
-.statHeader {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
+.cardBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+  backdrop-filter: blur(5px);
+  z-index: -1;
 }
 
-.statIcon {
-  width: 3rem;
-  height: 3rem;
+.cardDecor1, .cardDecor2 {
+  position: absolute;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
+  filter: blur(30px);
+  opacity: 0.7;
+  z-index: -2;
+  animation: float 6s ease-in-out infinite;
 }
 
-.totalListings .statIcon {
-  background-color: rgba(124, 58, 237, 0.1);
-  color: var(--primary);
+.cardDecor1 {
+  width: 100px;
+  height: 100px;
+  top: -20px;
+  right: -20px;
 }
 
-.activeListings .statIcon {
-  background-color: rgba(16, 185, 129, 0.1);
-  color: var(--secondary);
+.cardDecor2 {
+  width: 80px;
+  height: 80px;
+  bottom: -10px;
+  left: -10px;
+  animation-delay: 1s;
 }
 
-.totalValue .statIcon {
-  background-color: rgba(59, 130, 246, 0.1);
-  color: var(--info);
+/* Individual Card Colors */
+.totalListings {
+  background: linear-gradient(135deg, #8e44ad, #9b59b6);
+}
+
+.totalListings .cardDecor1 {
+  background: #e84393;
+}
+
+.totalListings .cardDecor2 {
+  background: #3498db;
+}
+
+.activeListings {
+  background: linear-gradient(135deg, #2e66cc, #27ae60)
+}
+
+.activeListings .cardDecor1 {
+  background: #f1c40f;
+}
+
+.activeListings .cardDecor2 {
+  background: #e67e22;
+}
+
+.totalValue {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.totalValue .cardDecor1 {
+  background: #f39c12;
+}
+
+.totalValue .cardDecor2 {
+  background: #d35400;
+}
+
+/* Card Content */
+.statIcon {
+  font-size: 2.5rem;
+  margin-right: 1.5rem;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+.statContent {
+  flex-grow: 1;
 }
 
 .statContent h3 {
-  font-size: 1.75rem;
+  font-size: 2.2rem;
+  margin: 0 0 0.3rem;
   font-weight: 700;
-  margin: 0;
-  color: var(--dark);
+  position: relative;
+  display: inline-block;
+}
+
+.statContent h3::after {
+  content: attr(data-count);
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.statCard:hover .statContent h3::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.statCard:hover .statContent h3::before {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 
 .statContent p {
-  font-size: 0.875rem;
-  color: var(--gray);
   margin: 0;
+  font-size: 1rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+/* Count Animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.statCard:hover .statContent h3 {
+  animation: countUp 0.5s ease forwards;
+}
+/* Flowers Container */
+.flowersContainer {
+  padding: 1rem 0;
+  min-height: 60vh;
+}
+
+/* Loading State */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  gap: 1.5rem;
+}
+
+.loadingSpinner {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.spinnerInner {
+  width: 100%;
+  height: 100%;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #8e44ad;
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+}
+
+.spinnerFlower {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.loadingState p {
+  font-size: 1.1rem;
+  color: #555;
+  font-weight: 500;
 }
 
 /* Flower Grid */
 .flowerGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
+  padding: 1rem 0;
 }
 
+/* Flower Card */
 .flowerCard {
-  background-color: var(--white);
-  border-radius: var(--border-radius);
+  background: white;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  min-height: 420px;
 }
 
 .flowerCard:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
 }
 
 .flowerImageContainer {
   position: relative;
-  width: 100%;
-  padding-top: 100%;
+  height: 300px;
   overflow: hidden;
 }
 
 .flowerImage {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease;
 }
 
 .flowerCard:hover .flowerImage {
   transform: scale(1.05);
 }
 
+.flowerOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 1.5rem;
+}
+
+.flowerCard:hover .flowerOverlay {
+  opacity: 1;
+}
+
+/* If you want buttons to appear only on hover */
 .flowerActions {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  bottom: 15px;
+  right: 15px;
   display: flex;
-  gap: 0.5rem;
+  gap: 10px;
+  z-index: 3;
   opacity: 0;
-  transition: var(--transition);
+  transition: opacity 0.3s ease;
 }
 
 .flowerCard:hover .flowerActions {
   opacity: 1;
 }
-
-/* In your sellerDashboard.module.css */
-
-.editBtn, .deleteBtn {
-  width: 2.5rem;  /* Increased from 2rem */
-  height: 2.5rem; /* Increased from 2rem */
+.actionBtn {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  background: rgba(255,255,255,0.9);
   border: none;
+  color: #333;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: var(--transition);
-  background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  color: var(--white);
-  font-size: 1.1rem; /* Added to increase icon size */
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Alternatively, if you need even larger buttons */
-.largeEditBtn, .largeDeleteBtn {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  border: none;
+.actionBtn:hover {
+  background: white;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.actionBtn:first-child:hover {
+  color: #2ecc71;
+}
+
+.actionBtn:last-child:hover {
+  color: #e74c3c;
+}
+
+.flowerRibbon {
+  position: absolute;
+  top: 15px;
+  right: -30px;
+  width: 100px;
+  height: 30px;
+  transform: rotate(45deg);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: var(--transition);
-  background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  color: var(--white);
-  font-size: 1.3rem;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-/* For better icon visibility on hover */
-.editBtn:hover, .deleteBtn:hover,
-.largeEditBtn:hover, .largeDeleteBtn:hover {
-  transform: scale(1.1);
-  opacity: 1;
-}
-
-/* Specific button colors */
-.editBtn, .largeEditBtn {
-  background-color: rgba(59, 130, 246, 0.9);
-}
-
-.deleteBtn, .largeDeleteBtn {
-  background-color: rgba(239, 68, 68, 0.9);
-}
-
-/* If you're using Font Awesome icons specifically */
-.editBtn svg, .deleteBtn svg,
-.largeEditBtn svg, .largeDeleteBtn svg {
-  width: 1em;
-  height: 1em;
-}
-
-.editBtn {
-  background-color: rgba(59, 130, 246, 0.9);
-}
-
-.editBtn:hover {
-  background-color: var(--info);
-  transform: scale(1.1);
-}
-
-.deleteBtn {
-  background-color: rgba(239, 68, 68, 0.9);
-}
-
-.deleteBtn:hover {
-  background-color: var(--danger);
-  transform: scale(1.1);
-}
-
+/* Flower Details */
 .flowerDetails {
-  padding: 1.25rem;
+  padding: 1.2rem;
 }
 
 .flowerName {
-  font-size: 1.125rem;
+  margin: 0 0 0.8rem;
+  font-size: 1.2rem;
+  color: #333;
   font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: var(--dark);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -504,125 +696,127 @@
 
 .flowerMeta {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-}
-
-.flowerColor {
-  width: 1.25rem;
-  height: 1.25rem;
-  border-radius: 50%;
-  border: 1px solid var(--gray-light);
+  align-items: center;
 }
 
 .flowerPrice {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #8e44ad;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.3rem;
+}
+
+.flowerColorTag {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: var(--primary);
+  text-transform: capitalize;
 }
 
 /* Empty State */
 .emptyState {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 3rem 1rem;
-  background-color: var(--white);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-sm);
-}
-
-.emptyIcon {
-  font-size: 3rem;
-  color: var(--gray-light);
-  margin-bottom: 1rem;
-}
-
-.emptyState h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: var(--dark);
-}
-
-.emptyState p {
-  color: var(--gray);
-  margin: 0 0 1.5rem 0;
-}
-
-/* Loading State */
-.loadingState {
-  grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #f9f9f9, #f0f0f0);
+  border-radius: 16px;
+  margin: 2rem 0;
 }
 
-.loadingSpinner {
-  width: 3rem;
-  height: 3rem;
-  border: 3px solid rgba(124, 58, 237, 0.1);
-  border-radius: 50%;
-  border-top-color: var(--primary);
-  animation: spin 1s linear infinite;
+.emptyIllustration {
+  position: relative;
+  width: 120px;
+  height: 120px;
   margin-bottom: 1.5rem;
 }
 
-.loadingText {
-  color: var(--gray);
+.emptyIcon {
+  font-size: 3.5rem;
+  color: #8e44ad;
+  position: relative;
+  z-index: 2;
 }
 
-/* Responsive Styles */
-@media (max-width: 1024px) {
-  .dashboardMain {
-    padding: 1.5rem;
-  }
-  
-  .statsCards {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.emptyPetal {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: rgba(142, 68, 173, 0.2);
+  border-radius: 50%;
 }
 
-@media (max-width: 768px) {
-  .dashboardNavbar {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  
-  .searchBar {
-    width: 100%;
-    margin: 0;
-  }
-  
-  .headerActions {
-    width: 100%;
-    justify-content: space-between;
-  }
-  
-  .flowerGrid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  }
+.emptyPetal:nth-child(2) {
+  top: 0;
+  left: 0;
+  background: rgba(232, 67, 147, 0.2);
+  animation: float 4s ease-in-out infinite;
 }
 
-@media (max-width: 480px) {
-  .statsCards {
-    grid-template-columns: 1fr;
-  }
-  
-  .flowerGrid {
-    grid-template-columns: 1fr;
-  }
-  
-  .dashboardHeader {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .addFlowerBtn {
-    width: 100%;
-  }
+.emptyPetal:nth-child(3) {
+  bottom: 0;
+  right: 0;
+  background: rgba(46, 204, 113, 0.2);
+  animation: float 5s ease-in-out infinite reverse;
+}
+
+.emptyPetal:nth-child(4) {
+  top: 20px;
+  right: 10px;
+  background: rgba(241, 196, 15, 0.2);
+  animation: float 6s ease-in-out infinite 1s;
+}
+
+.emptyState h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.emptyState p {
+  color: #666;
+  margin-bottom: 1.5rem;
+  max-width: 400px;
+}
+
+.addFlowerBtn {
+  padding: 0.8rem 1.8rem;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #8e44ad, #e84393);
+  color: white;
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+}
+
+.addFlowerBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(142, 68, 173, 0.4);
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }

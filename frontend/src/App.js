@@ -33,6 +33,7 @@ import AddFlower from './components/AddFlower';
 import Cart from "./components/Cart";
 import Order from "./components/OrderPage";
 import SellerOrders from './components/seller/SellerOrders';
+import EditFlower from './components/seller/Editflower';
 
 import { UserProvider } from './UserContext';
  // ✅ Import context
@@ -53,8 +54,7 @@ export default function App() {
         <Route path="/AddFlower" element={<AddFlower />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/SellerOrders" element={<SellerOrders />} />
-
-
+        <Route path="/edit-flower/:id" element={<EditFlower />} />
       </Routes>
     </UserProvider>
   );

@@ -39,11 +39,11 @@ const SellerOrders = () => {
     )
   );
 
-  const handleStatusUpdate = async (orderId, newStatus) => {
+  const handleFlowerStatusUpdate = async (orderId, flowerId, newStatus) => {
     try {
-      setUpdatingOrder(orderId);
+      setUpdatingOrder(flowerId);
       await axios.put(
-        `http://localhost:5000/api/orders/${orderId}/status`,
+        `http://localhost:5000/api/orders/${orderId}/flower/${flowerId}/status`,
         { status: newStatus },
         {
           headers: {
@@ -51,21 +51,30 @@ const SellerOrders = () => {
           }
         }
       );
-      
-      setOrders(prevOrders => 
-        prevOrders.map(order => 
-          order._id === orderId ? { ...order, status: newStatus } : order
-        )
+
+      setOrders(prevOrders =>
+        prevOrders.map(order => {
+          if (order._id === orderId) {
+            const updatedFlowers = order.flowers.map(flower => {
+              if (flower.flowerId._id === flowerId) {
+                return { ...flower, status: newStatus };
+              }
+              return flower;
+            });
+            return { ...order, flowers: updatedFlowers };
+          }
+          return order;
+        })
       );
     } catch (err) {
-      console.error('Status update failed:', err);
+      console.error('Flower status update failed:', err);
     } finally {
       setUpdatingOrder(null);
     }
   };
 
-  const getStatusControls = (order) => {
-    if (order.status === 'accepted') {
+  const getFlowerStatusControls = (order, flower) => {
+    if (flower.status === 'accepted') {
       return (
         <span className={styles.statusBadgeAccepted}>
           <FiCheckCircle /> Approved
@@ -77,14 +86,14 @@ const SellerOrders = () => {
       <div className={styles.statusControls}>
         <button
           className={`${styles.statusButton} ${styles.approveButton}`}
-          onClick={() => handleStatusUpdate(order._id, 'accepted')}
-          disabled={updatingOrder === order._id}
+          onClick={() => handleFlowerStatusUpdate(order._id, flower.flowerId._id, 'accepted')}
+          disabled={updatingOrder === flower.flowerId._id}
         >
-          {updatingOrder === order._id ? <FiLoader className={styles.spin} /> : <FiCheck />}
+          {updatingOrder === flower.flowerId._id ? <FiLoader className={styles.spin} /> : <FiCheck />}
           Approve
         </button>
-        
-        {order.status === 'not accepted' && (
+
+        {flower.status === 'not accepted' && (
           <span className={styles.statusBadgeRejected}>
             <FiX /> Rejected
           </span>
@@ -163,7 +172,7 @@ const SellerOrders = () => {
                 <div className={styles.orderDate}>
                   <FiCalendar /> {formatDate(order.orderedAt)}
                 </div>
-                {getStatusControls(order)}
+                {/* Removed getStatusControls(order) since approval is per flower item */}
               </div>
 
               <div className={styles.customerInfo}>
@@ -195,15 +204,18 @@ const SellerOrders = () => {
                       )}
                     </div>
                     <div className={styles.itemDetails}>
-                      <h5>{item.flowerId?.name || 'Unknown Flower'}</h5>
-                      <div className={styles.itemMeta}>
-                        <span>Quantity: {item.quantity}</span>
-                        <span>Price: ₹{item.price?.toFixed(2) || '0.00'}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              <h5>{item.flowerId?.name || 'Unknown Flower'}</h5>
+              <div className={styles.itemMeta}>
+                <span>Quantity: {item.quantity}</span>
+                <span>Price: ₹{item.price?.toFixed(2) || '0.00'}</span>
               </div>
+              <div className={styles.flowerStatusControl}>
+                {getFlowerStatusControls(order, item)}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
               <div className={styles.orderFooter}>
                 <div className={styles.orderTotal}>

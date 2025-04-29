@@ -106,5 +106,31 @@ router.post("/remove", async (req, res) => {
       });
     }
   });
+// In CartRoutes.js
+router.post("/removeBatch", async (req, res) => {
+  const { userId, flowerIds } = req.body;
+  const Cart = req.Cart;
+
+  if (!userId || !Array.isArray(flowerIds) || flowerIds.length === 0) {
+    return res.status(400).json({ error: "Missing userId or flowerIds." });
+  }
+
+  try {
+    const updatedCart = await Cart.findOneAndUpdate(
+      { userId },
+      { $pull: { flowers: { $in: flowerIds } } },
+      { new: true }
+    );
+
+    if (!updatedCart) {
+      return res.status(404).json({ error: "Cart not found." });
+    }
+
+    res.status(200).json(updatedCart);
+  } catch (err) {
+    console.error("Error removing flowers from cart:", err);
+    res.status(500).json({ error: "Failed to remove items from cart." });
+  }
+});
 
 module.exports = router;

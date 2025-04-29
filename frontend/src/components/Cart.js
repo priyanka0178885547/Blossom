@@ -92,21 +92,20 @@ const CartPage = () => {
       setError("Failed to move to wishlist. Please try again.");
     }
   };
-
   const handlePlaceOrder = async () => {
     if (!userId) {
       setError("You must be logged in to place an order");
       return;
     }
-
+  
     if (cartItems.length === 0) {
       setError("Your cart is empty");
       return;
     }
-
+  
     setIsPlacingOrder(true);
     setError(null);
-
+  
     try {
       const orderData = {
         buyer: userId,
@@ -115,27 +114,27 @@ const CartPage = () => {
           quantity: item.quantity
         }))
       };
-
+  
+      // Place the order first
       const response = await axios.post("http://localhost:5000/api/orders", orderData, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${localStorage.getItem("token")}`
         }
       });
-
-      // Clear cart on success
-      await Promise.all(
-        cartItems.map(item => 
-          axios.post("http://localhost:5000/api/cart/remove", {
-            userId,
-            flowerId: item._id
-          })
-        )
-      );
-            setCartItems([]);
+  
+      // After placing the order, clear the cart
+      const flowerIds = cartItems.map(item => item._id);
+      await axios.post("http://localhost:5000/api/cart/removeBatch", {
+        userId,
+        flowerIds
+      });
+  
+      // Clear cart in the UI immediately
+      setCartItems([]);
       localStorage.removeItem("cart");
       setOrderSuccess(true);
-      
+  
       setTimeout(() => {
         navigate("/orders");
       }, 2000);
@@ -146,6 +145,7 @@ const CartPage = () => {
       setIsPlacingOrder(false);
     }
   };
+  
 
   // Calculate totals
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);

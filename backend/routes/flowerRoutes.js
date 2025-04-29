@@ -16,7 +16,6 @@ router.post(
   },
   flowerController.addFlower
 );
-
 // Seller views their flowers
 router.get(
   '/my-flowers',
@@ -24,7 +23,18 @@ router.get(
   authorizeRoles('seller'),
   flowerController.getMyFlowers
 );
-
+// Update flower details
+router.put(
+  '/update/:id',
+  authenticateJWT,
+  authorizeRoles('seller'),
+  parser.single('image'),
+  (req, res, next) => {
+    console.log('🔄 Update route hit, file:', req.file);
+    next();
+  },
+  flowerController.updateFlower
+);
 // Delete flower (optional)
 router.delete(
   '/delete/:id',
@@ -36,5 +46,10 @@ router.get(
   '/all',
   flowerController.getAllFlowers // No auth, accessible to all
 );
-
+router.get(
+  '/:id',
+  authenticateJWT,
+  authorizeRoles('seller'),
+  flowerController.getFlowerById
+);
 module.exports = router;

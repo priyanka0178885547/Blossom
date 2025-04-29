@@ -8,7 +8,8 @@ const orderSchema = new mongoose.Schema({
     {
       flowerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Flower', required: true },
       quantity: { type: Number, required: true },
-      price: { type: Number, required: true }
+      price: { type: Number, required: true },
+      status: { type: String, default: 'not accepted' }  // Added status per flower item
     }
   ],
   totalPrice: { type: Number, required: true },

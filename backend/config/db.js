@@ -17,7 +17,7 @@ const userDetailsDB = mongoose.createConnection(process.env.USER_DB_URI, {
 // Models from each DB
 const User = userModel(userDetailsDB); // 👈 User from userDetails DB
 const Flower = flowerModel(blossomDB); // 👈 Flower from blossom DB
-const Order = blossomDB.model('Order', orderSchema); // 👈 Order from blossom DB
+const Order = blossomDB.model('Order', orderSchema);
 
 module.exports = {
   blossomDB,

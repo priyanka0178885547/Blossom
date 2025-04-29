@@ -206,7 +206,10 @@ const SellerDashboard = () => {
   useEffect(() => {
     fetchFlowers();
   }, [fetchFlowers]);
-
+  // Add this edit function
+  const editFlower = (id) => {
+    navigate(`/edit-flower/${id}`);
+  };
   const handleRefresh = () => {
     setIsRefreshing(true);
     fetchFlowers();
@@ -242,46 +245,44 @@ const SellerDashboard = () => {
     flower.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     flower.color.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
   return (
     <div className={styles.sellerDashboard}>
       {/* Navbar */}
       <nav className={styles.dashboardNavbar}>
-  <div className={styles.navbarBrand}>
-    <FiShoppingBag className={styles.brandIcon} />
-    <span>FloralHub</span>
-  </div>
+        <div className={styles.navbarBrand}>
+          <FiShoppingBag className={styles.brandIcon} />
+          <span>FloralHub</span>
+        </div>
+        
+        <div className={styles.searchBar}>
+          <FiSearch className={styles.searchIcon} />
+          <input
+            type="text"
+            placeholder="Search flowers..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        
+        <div className={styles.userActions}>
+          <div className={styles.userProfile}>
+            <div className={styles.userAvatar}>
+              <FiUser />
+            </div>
+            <span className={styles.userName}>{userName}</span>
+          </div>
+          
+          <button className={styles.orderBtn} onClick={handleOrderClick}>
+            <FiShoppingCart />
+            Order
+          </button>
+          
+          <button className={styles.logoutBtn} onClick={handleLogout}>
+            <FiLogOut />
+          </button>
+        </div>
+      </nav>
   
-  <div className={styles.searchBar}>
-    <FiSearch className={styles.searchIcon} />
-    <input
-      type="text"
-      placeholder="Search flowers..."
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-    />
-  </div>
-  
-  <div className={styles.userActions}>
-    <div className={styles.userProfile}>
-      <div className={styles.userAvatar}>
-        <FiUser />
-      </div>
-      <span className={styles.userName}>{userName}</span>
-    </div>
-    
-    <button className={styles.orderBtn} onClick={handleOrderClick}>
-      <FiShoppingCart />
-      Order
-    </button>
-    
-    <button className={styles.logoutBtn} onClick={handleLogout}>
-      <FiLogOut />
-    </button>
-  </div>
-</nav>
-
-
       {/* Main Content */}
       <main className={styles.dashboardMain}>
         {alert.message && (
@@ -293,57 +294,81 @@ const SellerDashboard = () => {
             <span>{alert.message}</span>
           </div>
         )}
-
+  
         <div className={styles.dashboardHeader}>
-          <h1>My Flower Inventory</h1>
+          <div className={styles.headerTitleContainer}>
+            <h1 className={styles.headerTitle}>
+              <span className={styles.titleGradient}>My Flower Inventory</span>
+              <span className={styles.flowerDecor}>🌸</span>
+            </h1>
+            <p className={styles.headerSubtitle}>Manage your beautiful floral collection</p>
+          </div>
+          
           <div className={styles.headerActions}>
             <button 
-              className={styles.refreshBtn}
+              className={`${styles.headerButton} ${styles.refreshBtn}`}
               onClick={handleRefresh}
               disabled={isRefreshing}
             >
-              <FiRefreshCw className={isRefreshing ? styles.spinning : ""} />
-              Refresh
+              <FiRefreshCw className={`${styles.buttonIcon} ${isRefreshing ? styles.spinning : ""}`} />
+              <span className={styles.buttonText}>Refresh</span>
+              <span className={styles.buttonHoverEffect}></span>
             </button>
+            
             <button 
-              className={styles.addFlowerBtn}
+              className={`${styles.headerButton} ${styles.addFlowerBtn}`}
               onClick={() => navigate('/AddFlower')}
             >
-              <FiPlus />
-              Add New Flower
+              <FiPlus className={styles.buttonIcon} />
+              <span className={styles.buttonText}>Add New Flower</span>
+              <span className={styles.buttonHoverEffect}></span>
             </button>
           </div>
         </div>
-
+  
         <div className={styles.statsCards}>
           <div className={`${styles.statCard} ${styles.totalListings}`}>
+            <div className={styles.cardBackground}></div>
             <FiShoppingBag className={styles.statIcon} />
             <div className={styles.statContent}>
-              <h3>{flowers.length}</h3>
+              <h3 data-count={flowers.length}>{flowers.length}</h3>
               <p>Total Listings</p>
             </div>
+            <div className={styles.cardDecor1}></div>
+            <div className={styles.cardDecor2}></div>
           </div>
+          
           <div className={`${styles.statCard} ${styles.activeListings}`}>
+            <div className={styles.cardBackground}></div>
             <FiTag className={styles.statIcon} />
             <div className={styles.statContent}>
-              <h3>{flowers.length}</h3>
+              <h3 data-count={flowers.length}>{flowers.length}</h3>
               <p>Active Listings</p>
             </div>
+            <div className={styles.cardDecor1}></div>
+            <div className={styles.cardDecor2}></div>
           </div>
+          
           <div className={`${styles.statCard} ${styles.totalValue}`}>
+            <div className={styles.cardBackground}></div>
             <FiDollarSign className={styles.statIcon} />
             <div className={styles.statContent}>
               <h3>₹{flowers.reduce((sum, flower) => sum + parseFloat(flower.price), 0).toFixed(2)}</h3>
               <p>Total Inventory Value</p>
             </div>
+            <div className={styles.cardDecor1}></div>
+            <div className={styles.cardDecor2}></div>
           </div>
         </div>
-
+  
         <div className={styles.flowersContainer}>
           {loading ? (
             <div className={styles.loadingState}>
-              <div className={styles.loadingSpinner}></div>
-              <p>Loading your flowers...</p>
+              <div className={styles.loadingSpinner}>
+                <div className={styles.spinnerInner}></div>
+                <div className={styles.spinnerFlower}>🌼</div>
+              </div>
+              <p>Loading your beautiful flowers...</p>
             </div>
           ) : filteredFlowers.length > 0 ? (
             <div className={styles.flowerGrid}>
@@ -360,27 +385,39 @@ const SellerDashboard = () => {
                     />
                     <div className={styles.flowerActions}>
                       <button 
-                        className={styles.largeEditBtn}
-                        onClick={() => navigate(`/edit-flower/${flower._id}`)}
+                        className={styles.actionBtn}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/edit-flower/${flower._id}`);
+                        }}
                         title="Edit"
                       >
-                        <FiEdit  size={30}/>
+                        <FiEdit className={styles.actionIcon} />
                       </button>
                       <button 
-                        className={styles.largeDeleteBtn}
-                        onClick={() => deleteFlower(flower._id)}
+                        className={`${styles.actionBtn} ${styles.deleteBtn}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteFlower(flower._id);
+                        }}
                         title="Delete"
                       >
-                        <FiTrash2 />
+                        <FiTrash2 className={styles.actionIcon} />
                       </button>
                     </div>
+                    <div className={styles.flowerRibbon} style={{ backgroundColor: flower.color.toLowerCase() }}></div>
                   </div>
                   <div className={styles.flowerDetails}>
                     <h3 className={styles.flowerName}>{flower.name}</h3>
                     <div className={styles.flowerMeta}>
-                      <span className={styles.flowerColor} style={{ backgroundColor: flower.color.toLowerCase() }}></span>
                       <span className={styles.flowerPrice}>
-                        <FiDollarSign /> {flower.price}
+                        ₹{flower.price}
+                      </span>
+                      <span className={styles.flowerColorTag} style={{ 
+                        backgroundColor: `${flower.color.toLowerCase()}20`,
+                        color: flower.color.toLowerCase()
+                      }}>
+                        {flower.color}
                       </span>
                     </div>
                   </div>
@@ -389,9 +426,14 @@ const SellerDashboard = () => {
             </div>
           ) : (
             <div className={styles.emptyState}>
-              <FiShoppingBag className={styles.emptyIcon} />
+              <div className={styles.emptyIllustration}>
+                <FiShoppingBag className={styles.emptyIcon} />
+                <div className={styles.emptyPetal}></div>
+                <div className={styles.emptyPetal}></div>
+                <div className={styles.emptyPetal}></div>
+              </div>
               <h3>No flowers found</h3>
-              <p>{searchTerm ? 'Try a different search term' : 'You haven\'t added any flowers yet'}</p>
+              <p>{searchTerm ? 'Try a different search term' : 'Your garden is waiting for flowers!'}</p>
               <button 
                 className={styles.addFlowerBtn}
                 onClick={() => navigate('/AddFlower')}
