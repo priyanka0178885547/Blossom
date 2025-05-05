@@ -22,26 +22,19 @@ const ShopPage = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
- 
-
     const messagesEndRef = useRef(null);
-
     // Scroll to bottom whenever messages change
     useEffect(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
-  
     const handleSendMessage = async () => {
       if (!inputMessage.trim()) return;
-  
       const userMessage = { text: inputMessage, sender: "user" };
       setMessages(prev => [...prev, userMessage]);
       setInputMessage("");
       setIsTyping(true);
-  
       try {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  
         const prompt = `
         You are "Blossom Buddy", the AI assistant for Blossom Shop flower store. 
         Your role is to help customers with:
@@ -70,11 +63,9 @@ const ShopPage = () => {
   
         Respond helpfully as the flower expert:
         `;
-  
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
-  
         setMessages(prev => [...prev, { 
           text: text, 
           sender: "ai",

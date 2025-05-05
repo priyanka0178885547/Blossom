@@ -124,7 +124,7 @@ router.get("/seller/:sellerId", async (req, res) => {
     const sellerId = req.params.sellerId;
     // Reduced logs to avoid flooding terminal
     // console.log("🔍 Fetching orders for seller:", sellerId);
-
+    console.log(sellerId);
     // Step 1: Get all flowers for this seller
     const sellerFlowers = await req.flowerDB.find({ seller: sellerId });
     // console.log("🌸 Seller's flowers:", sellerFlowers);
@@ -175,7 +175,7 @@ router.get("/seller/:sellerId", async (req, res) => {
 
     // Step 3: Filter orders to only include those containing this seller's flowers
     let filteredOrders = orders.filter(order => {
-      return order.flowers.some(flower => flowerIds.includes(flower.flowerId._id.toString()));
+      return order.flowers.some(flower => flower.flowerId && flowerIds.includes(flower.flowerId._id.toString()));
     });
 
     if (filteredOrders.length === 0) {
@@ -185,7 +185,7 @@ router.get("/seller/:sellerId", async (req, res) => {
 
     // Step 4: For each order, filter flowers to only include those sold by this seller
     filteredOrders = filteredOrders.map(order => {
-      const filteredFlowers = order.flowers.filter(flower => flowerIds.includes(flower.flowerId._id.toString()));
+      const filteredFlowers = order.flowers.filter(flower => flower.flowerId && flowerIds.includes(flower.flowerId._id.toString()));
       return {
         ...order,
         flowers: filteredFlowers
