@@ -4,7 +4,7 @@ import {
   FaFacebookF, FaInstagram, FaPinterestP, FaTwitter,
   FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock 
 } from 'react-icons/fa';
-
+import VisitorCounter from './Visitor';  // Importing the VisitorCounter component
 const BlossomFlowers = () => {
   return (
     <div className="blossom-app">
@@ -60,6 +60,9 @@ const Header = () => {
         <a href="signup" className="nav-link1">Signup</a>
         <a href="about" className="nav-link1">About</a>
         <a href="#" className="nav-link1">Contact</a>
+        <div className="visitor-count">
+            <VisitorCounter />
+          </div>
       </nav>
     </header>
   );

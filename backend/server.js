@@ -232,6 +232,7 @@ const cartRoutes = require("./routes/CartRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes1");
 console.log("hello");
 const wishlistDB = mongoose.createConnection(process.env.WISHLIST_DB_URI, { /* config */ });
+const visitorRoutes = require('./routes/visitorRoutes');
 
 const Wishlist = require('./models/wishlist')(wishlistDB);
 
@@ -354,6 +355,7 @@ app.post("/api/translate", async (req, res) => {
     res.status(500).json({ message: "Translation failed" });
   }
 });
+app.use('/api/visitor', visitorRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
