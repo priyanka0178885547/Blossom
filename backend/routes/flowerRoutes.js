@@ -11,7 +11,7 @@ router.post(
   authorizeRoles('seller'),
   parser.single('image'),
   (req, res, next) => {
-    console.log('✅ Route hit, file:', req.file);
+    console.log(' Route hit, file:', req.file);
     next();
   },
   flowerController.addFlower

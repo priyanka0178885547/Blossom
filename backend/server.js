@@ -238,9 +238,7 @@ const Wishlist = require('./models/wishlist')(wishlistDB);
 
 dotenv.config();
 const app = express();
-// console.log('__dirname:', __dirname);  // Check where your code is running from
 
-// Middleware
 app.use(express.json());
 // console.log(process.env);  // This will print all environment variables
 
