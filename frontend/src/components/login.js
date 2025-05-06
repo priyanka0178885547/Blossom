@@ -104,11 +104,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+<<<<<<< HEAD
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+=======
+const Login = () => {
+  const [user, sietUser] = useState({ email: '', password: '' });
+>>>>>>> 005a982 (Committing project)
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
